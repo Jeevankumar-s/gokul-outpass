@@ -13,7 +13,7 @@ class index extends Component {
     super()
     this.state = {
       outpassData: [],
-      studentOutpassData: [],
+      employeeOutpassData: [],
       button: null,
       loading: false,
     }
@@ -23,7 +23,7 @@ class index extends Component {
     const {location: {state: {username, user} = {}} = {}} = this.props
 
     const apiUrl =
-      user === 'student'
+      user === 'employee'
         ? `http://localhost:3000/api/outpass/history/${username}`
         : 'http://localhost:3000/api/outpass/history'
 
@@ -35,8 +35,8 @@ class index extends Component {
         return response.json()
       })
       .then(data => {
-        if (user === 'student') {
-          this.setState({studentOutpassData: data})
+        if (user === 'employee') {
+          this.setState({employeeOutpassData: data})
         } else {
           this.setState({outpassData: data})
         }
@@ -44,47 +44,10 @@ class index extends Component {
       .catch(error => console.error('Error fetching data:', error))
   }
 
-  handleStaffAccept = id => {
-    axios
-      .post(
-        `http://localhost:3000/api/outpass/outpass/${id}/staff-approve`,
-      )
-      .then(response => {
-        if (response.data.success) {
-          // Update the UI to reflect the accepted outpass
-          this.updateOutpassStatus(id, 'Staff Approved')
-          alert(`Accepted outpass with ID: ${id}`)
-        } else {
-          alert(`Failed to accept outpass with ID: ${id}`)
-        }
-      })
-      .catch(error => {
-        console.error('Error accepting outpass:', error)
-        alert(`An error occurred while accepting outpass with ID: ${id}`)
-      })
-  }
 
-  handleStaffDecline = id => {
-    axios
-      .post(
-        `http://localhost:3000/api/outpass/outpass/${id}/staff-decline`,
-      )
-      .then(response => {
-        if (response.data.success) {
-          // Update the UI to reflect the accepted outpass
-          this.updateOutpassStatus(id, 'Staff Declined')
-          alert(`Declined outpass with ID: ${id}`)
-        } else {
-          alert(`Failed to accept outpass with ID: ${id}`)
-        }
-      })
-      .catch(error => {
-        console.error('Error accepting outpass:', error)
-        alert(`An error occurred while accepting outpass with ID: ${id}`)
-      })
-  }
 
-  // hod accept
+
+  // hr accept
 
   handleAccept = id => {
     this.setState({loading: true})
@@ -143,7 +106,7 @@ class index extends Component {
     // Update the component's state to reflect the accepted or declined outpass
     const {location: {state: {username, user} = {}} = {}} = this.props
 
-    if (user === 'staff' || 'hod') {
+    if (user === 'hr') {
       const {outpassData} = this.state
 
       const updatedOutpassData = outpassData.map(item => {
@@ -154,15 +117,15 @@ class index extends Component {
       })
       this.setState({outpassData: updatedOutpassData})
     } else {
-      const {studentOutpassData} = this.state
-      const updatedStudentOutpassData = studentOutpassData.map(item => {
+      const {employeeOutpassData} = this.state
+      const updatedStudentOutpassData = employeeOutpassData.map(item => {
         if (item.id === id) {
           return {...item, status}
         }
         return item
       })
       this.setState(prevState => ({
-        studentOutpassData: updatedStudentOutpassData,
+        employeeOutpassData: updatedStudentOutpassData,
       }))
     }
   }
@@ -170,7 +133,7 @@ class index extends Component {
   render() {
     const {location} = this.props
     const {username, user} = location.state || {}
-    const {outpassData, studentOutpassData, loading} = this.state
+    const {outpassData, employeeOutpassData, loading} = this.state
 
     return (
       <div className="container-fluid">
@@ -188,26 +151,16 @@ class index extends Component {
                 <h4 className="text-center">History</h4>
                 <div className="container">
                   <>
-                    {user === 'staff' || user === 'hod' ? (
+                    {user === 'hr' ? (
                       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
                         {outpassData.map(item => (
                           <div key={item.id} className="col mb-4">
                             <div className="card">
                               <div className="card-body">
                                 <h3 className="card-title">{item.name}</h3>
-                                <p className="card-text">
-                                  Register No: {item.registernumber}
-                                </p>
                                 <p className="card-text">Email: {item.email}</p>
                                 <p className="card-text">
-                                  Department: {item.department}
-                                </p>
-                                <p className="card-text">Year: {item.year}</p>
-                                <p className="card-text">
-                                  Semester: {item.semester}
-                                </p>
-                                <p className="card-text">
-                                  Requested Time: {item.current_datetime}
+                                  Role: {item.role}
                                 </p>
                                 <p className="card-text">
                                   Reason: {item.reason}
@@ -215,29 +168,7 @@ class index extends Component {
                                 <p className="card-text">
                                   Status: {item.status}
                                 </p>
-                                {user === 'staff' && (
-                                  // Render staff-specific buttons and assign staff-specific functions
-                                  <>
-                                    <button
-                                      onClick={() =>
-                                        this.handleStaffAccept(item.id)
-                                      }
-                                      className="btn btn-success mr-2"
-                                    >
-                                      Accept
-                                    </button>
-                                    <button
-                                      onClick={() =>
-                                        this.handleStaffDecline(item.id)
-                                      }
-                                      className="btn btn-danger m-3"
-                                    >
-                                      Decline
-                                    </button>
-                                  </>
-                                )}
-                                {user === 'hod' && (
-                                  // Render HOD-specific buttons and assign HOD-specific functions
+                                {user === 'hr' && (
                                   <>
                                     <button
                                       onClick={() => this.handleAccept(item.id)}
@@ -262,21 +193,15 @@ class index extends Component {
                       </div>
                     ) : (
                       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-                        {studentOutpassData.map(item => (
+                        {employeeOutpassData.map(item => (
                           <div key={item.id} className="col mb-4">
                             <div className="card">
                               <div className="card-body">
                                 <h3 className="card-title">{item.name}</h3>
-                                <p className="card-text">
-                                  Register No: {item.registernumber}
-                                </p>
+                               
                                 <p className="card-text">Email: {item.email}</p>
                                 <p className="card-text">
-                                  Department: {item.department}
-                                </p>
-                                <p className="card-text">Year: {item.year}</p>
-                                <p className="card-text">
-                                  Semester: {item.semester}
+                                  Role: {item.role}
                                 </p>
                                 <p className="card-text">
                                   Requested Time: {item.current_datetime}

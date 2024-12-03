@@ -34,18 +34,16 @@ class LoginForm extends Component {
 
       if (res.data.validation) {
         let user = ''
-        if (res.data.userType === 'student') {
-          user = 'student'
-        } else if (res.data.userType === 'staff') {
-          user = 'staff'
+        if (res.data.userType === 'employee') {
+          user = 'employee'
         } else {
-          user = 'hod'
+          user = 'hr'
         }
 
-        Cookies.set('jwt_token', res.data.kiruthiToken)
+        Cookies.set('jwt_token', res.data.jwtToken)
         this.setState({showSubmitError: false, user})
 
-        if (user === 'student') {
+        if (user === 'employee') {
           history.replace('/', {username, user})
         } else {
           history.replace('/history', {username, user})
@@ -107,7 +105,7 @@ class LoginForm extends Component {
         <form className="form-container" onSubmit={this.submitForm}>
           <div className="login-image-container">
             <img
-              src="/img/logo.webp"
+              src="/img/sch-logo.png"
               className="login-website-logo-desktop-image"
               alt="website logo"
             />

@@ -8,19 +8,12 @@ import Header from '../Header'
 
 class index extends Component {
   state = {
-    registernumber: '',
     name: '',
     email: '',
-    year: '',
-    department: '',
+    role: '',
     reason: '',
-    semester: '',
     showSubmitError: false,
     errorMsg: '',
-  }
-
-  onChangeregisterNo = event => {
-    this.setState({registernumber: event.target.value})
   }
 
   onChangename = event => {
@@ -31,16 +24,8 @@ class index extends Component {
     this.setState({email: event.target.value})
   }
 
-  onChangeyear = event => {
-    this.setState({year: event.target.value})
-  }
-
-  onChangedepartment = event => {
-    this.setState({department: event.target.value})
-  }
-
-  onChangeSem = event => {
-    this.setState({semester: event.target.value})
+  onChangeRole = event => {
+    this.setState({role: event.target.value})
   }
 
   onChangereason = event => {
@@ -49,27 +34,14 @@ class index extends Component {
 
   onSubmit = async event => {
     event.preventDefault()
-    const {
-      registernumber,
-      name,
-      email,
-      year,
-      department,
-      reason,
-      semester,
-      showSubmitError,
-      errorMsg,
-    } = this.state
+    const {name, email, role, reason, showSubmitError, errorMsg} = this.state
     try {
       const res = await axios.post(
         'http://localhost:3000/api/outpass/outpass',
         {
           name,
-          registernumber,
           email,
-          year,
-          department,
-          semester,
+          role,
           reason,
         },
       )
@@ -77,13 +49,12 @@ class index extends Component {
       if (res.data.submission) {
         this.setState({
           showSubmitError: false,
-          registernumber: '',
           name: '',
           email: '',
+          role: '',
           reason: '',
         })
         alert('Outpass Submitted Successfully')
-        // Use this.props.history.push to navigate to the dashboard
       } else {
         this.setState({showSubmitError: true, errorMsg: res.data.Error})
         alert('cant submit outpass')
@@ -101,17 +72,7 @@ class index extends Component {
   }
 
   render() {
-    const {
-      name,
-      registernumber,
-      email,
-      year,
-      department,
-      semester,
-      reason,
-      showSubmitError,
-      errorMsg,
-    } = this.state
+    const {name, email, role, reason, showSubmitError, errorMsg} = this.state
     // const {location} = this.props
     // const {state} = location
     // const userDetails = state && state.userDetails
@@ -130,26 +91,26 @@ class index extends Component {
             <form className="row p-3 g-3" onSubmit={this.onSubmit}>
               <div className="col-md-6">
                 <label htmlFor="inputEmail4" className="form-label">
-                  Register No
+                  Name
                 </label>
                 <input
                   type="text"
-                  value={registernumber}
-                  onChange={this.onChangeregisterNo}
+                  value={name}
+                  onChange={this.onChangename}
                   className="form-control"
                   id="inputEmail4"
                 />
               </div>
               <div className="col-md-6">
                 <label htmlFor="inputPassword4" className="form-label">
-                  Name
+                  Role
                 </label>
                 <input
                   type="text"
                   className="form-control"
                   id="inputPassword4"
-                  value={name}
-                  onChange={this.onChangename}
+                  value={role}
+                  onChange={this.onChangeRole}
                 />
               </div>
               <div className="col-md-6">
@@ -165,62 +126,6 @@ class index extends Component {
                 />
               </div>
 
-              <div className="col-md-6">
-                <label htmlFor="inputState" className="form-label">
-                  Year
-                </label>
-                <select
-                  id="inputState"
-                  onChange={this.onChangeyear}
-                  className="form-select"
-                >
-                  <option>V</option>
-                  <option>IV</option>
-                  <option>III</option>
-                  <option>II</option>
-                  <option>I</option>
-                </select>
-              </div>
-              <div className="col-md-4">
-                <label htmlFor="inputState" className="form-label">
-                  Semester
-                </label>
-                <select
-                  id="inputState"
-                  onChange={this.onChangeSem}
-                  className="form-select"
-                >
-                  <option>X</option>
-                  <option>IX</option>
-                  <option>VIII</option>
-                  <option>VII</option>
-                  <option>VI</option>
-                  <option>VI</option>
-                  <option>V</option>
-                  <option>IV</option>
-                  <option>III</option>
-                  <option>II</option>
-                  <option>I</option>
-                </select>
-              </div>
-              <div className="col-md-4">
-                <label htmlFor="inputState" className="form-label">
-                  Department
-                </label>
-                <select
-                  id="inputState"
-                  onChange={this.onChangedepartment}
-                  className="form-select"
-                >
-                  <option>EEE</option>
-                  <option>ECE</option>
-                  <option>CYS</option>
-                  <option>MECH</option>
-                  <option>AI</option>
-                  <option>IOT</option>
-                  <option>CSE</option>
-                </select>
-              </div>
               <div className="col-12">
                 <label htmlFor="inputAddress" className="form-label">
                   Reason

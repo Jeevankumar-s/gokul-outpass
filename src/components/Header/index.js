@@ -28,7 +28,7 @@ const Header = props => {
           className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
           id="menu"
         >
-          {user !== 'staff' && user !== 'hod' && (
+          {user !== 'hr' && (
             <li className="nav-item">
               <Link
                 to={{
@@ -45,22 +45,6 @@ const Header = props => {
               </Link>
             </li>
           )}
-          <li>
-            <Link
-              to={{
-                pathname: '/outpassstatus',
-                state: {
-                  username,
-                  user,
-                },
-              }}
-              data-bs-toggle="collapse"
-              className="nav-link px-0 align-middle text-white"
-            >
-              <i className="fs-5 bi-speedometer2"> </i>
-              <span className="ms-1 d-none d-sm-inline">Outpass Status</span>
-            </Link>
-          </li>
           <li>
             <Link
               to={{

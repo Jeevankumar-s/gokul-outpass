@@ -44,9 +44,6 @@ class index extends Component {
       .catch(error => console.error('Error fetching data:', error))
   }
 
-
-
-
   // hr accept
 
   handleAccept = id => {
@@ -76,13 +73,10 @@ class index extends Component {
     const confirmDecline = window.confirm(
       'Are you sure you want to decline this outpass?',
     )
-    
 
     if (confirmDecline) {
       axios
-        .post(
-          `http://localhost:3000/api/outpass/outpass/${id}/decline`,
-        )
+        .post(`http://localhost:3000/api/outpass/outpass/${id}/decline`)
         .then(response => {
           if (response.data.success) {
             // Update the UI to reflect the declined outpass
@@ -159,9 +153,7 @@ class index extends Component {
                               <div className="card-body">
                                 <h3 className="card-title">{item.name}</h3>
                                 <p className="card-text">Email: {item.email}</p>
-                                <p className="card-text">
-                                  Role: {item.role}
-                                </p>
+                                <p className="card-text">Role: {item.role}</p>
                                 <p className="card-text">
                                   Reason: {item.reason}
                                 </p>
@@ -198,11 +190,9 @@ class index extends Component {
                             <div className="card">
                               <div className="card-body">
                                 <h3 className="card-title">{item.name}</h3>
-                               
+
                                 <p className="card-text">Email: {item.email}</p>
-                                <p className="card-text">
-                                  Role: {item.role}
-                                </p>
+                                <p className="card-text">Role: {item.role}</p>
                                 <p className="card-text">
                                   Requested Time: {item.current_datetime}
                                 </p>

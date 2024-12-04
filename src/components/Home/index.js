@@ -137,7 +137,6 @@ class index extends Component {
                   id="inputAddress"
                   placeholder="Enter Valid Reason"
                   onChange={this.onChangereason}
-                  col="10"
                 />
               </div>
               <div className="col-12 d-flex justify-content-center">

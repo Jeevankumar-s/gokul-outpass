@@ -8,3 +8,15 @@
 .cart-img {
   width: 150px;
 }
+
+.status-accepted {
+  color: green;
+}
+
+.status-rejected {
+  color: red;
+}
+
+.status-pending {
+  color: orange;
+}

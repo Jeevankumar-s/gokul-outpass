@@ -96,28 +96,31 @@ class LoginForm extends Component {
     const {showSubmitError, errorMsg} = this.state
 
     return (
-      <div className="login-form-container">
-        <img
-          src="https://res.cloudinary.com/dprxsgnqn/image/upload/v1694320298/vc9ukp7bdnvkhkvzkn3n.jpg"
-          className="login-image"
-          alt="website login"
-        />
-        <form className="form-container" onSubmit={this.submitForm}>
-          <div className="login-image-container">
-            <img
-              src="/img/sch-logo.png"
-              className="login-website-logo-desktop-image"
-              alt="website logo"
-            />
-          </div>
-          <div className="input-container">{this.renderUsernameField()}</div>
-          <div className="input-container">{this.renderPasswordField()}</div>
-          <button type="submit" className="login-button">
-            Login
-          </button>
-          {showSubmitError && <p className="error-message">*{errorMsg}</p>}
-        </form>
-      </div>
+      <>
+        <h1 className="heading">Leave Management System</h1>
+        <div className="login-form-container">
+          <img
+            src="https://res.cloudinary.com/dprxsgnqn/image/upload/v1694320298/vc9ukp7bdnvkhkvzkn3n.jpg"
+            className="login-image"
+            alt="website login"
+          />
+          <form className="form-container" onSubmit={this.submitForm}>
+            <div className="login-image-container">
+              <img
+                src="/img/sch-logo.png"
+                className="login-website-logo-desktop-image"
+                alt="website logo"
+              />
+            </div>
+            <div className="input-container">{this.renderUsernameField()}</div>
+            <div className="input-container">{this.renderPasswordField()}</div>
+            <button type="submit" className="login-button">
+              Login
+            </button>
+            {showSubmitError && <p className="error-message">*{errorMsg}</p>}
+          </form>
+        </div>
+      </>
     )
   }
 }

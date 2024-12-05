@@ -9,7 +9,7 @@ import Cookies from 'js-cookie'
 import Header from '../Header'
 import './index.css'
 
-class Index extends Component {
+class index extends Component {
   constructor() {
     super()
     this.state = {
@@ -17,8 +17,6 @@ class Index extends Component {
       employeeOutpassData: [],
       button: null,
       loading: false,
-      fromDate: '',
-      toDate: '',
     }
   }
 
@@ -47,78 +45,56 @@ class Index extends Component {
       .catch(error => console.error('Error fetching data:', error))
   }
 
-  handleAccept = async id => {
-    this.setState({ loading: true });
-    try {
-      const response = await axios.post(
-        `http://localhost:3000/api/outpass/outpass/${id}/accept`
-      );
-      if (response.data.success) {
-        // Update the UI to reflect the accepted outpass
-        this.updateOutpassStatus(id, 'Accepted');
-        this.setState({ loading: false });
-        alert(`Accepted outpass with ID: ${id}`);
-      } else {
-        this.setState({ loading: false });
-        alert(`Failed to accept outpass with ID: ${id}`);
-      }
-    } catch (error) {
-      this.setState({ loading: false });
-      console.error('Error accepting outpass:', error);
-      alert(`An error occurred while accepting outpass with ID: ${id}`);
-    }
-  };
-  
+  // hr accept
 
-  handleDecline = async id => {
-    // Show a confirmation dialog to the staff member
-    const confirmDecline = window.confirm(
-      'Are you sure you want to decline this outpass?'
-    );
-  
-    if (confirmDecline) {
-      try {
-        const response = await axios.post(
-          `http://localhost:3000/api/outpass/outpass/${id}/decline`
-        );
-        console.log(response.data.success);
+  handleAccept = id => {
+    this.setState({loading: true})
+    axios
+      .post(`http://localhost:3000/api/outpass/outpass/${id}/accept`)
+      .then(response => {
         if (response.data.success) {
-          // Update the UI to reflect the declined outpass
-          this.updateOutpassStatus(id, 'Rejected');
-          alert(`Declined outpass with ID: ${id}`);
+          // Update the UI to reflect the accepted outpass
+          this.updateOutpassStatus(id, 'Accepted')
+          this.setState({loading: false})
+          alert(`Accepted outpass with ID: ${id}`)
         } else {
-          alert(`Failed to decline outpass with ID: ${id}`);
+          alert(`Failed to accept outpass with ID: ${id}`)
         }
-      } catch (error) {
-        console.log(error)
-        console.error('Error declining outpass:', error);
-        alert(`An error occurred while declining outpass with ID: ${id}`);
-      }
-    }
-  };
-
-
-  
-
-
-  // Date filter change handler
-  handleDateChange = (event, type) => {
-    this.setState({[type]: event.target.value})
+      })
+      .catch(error => {
+        console.error('Error accepting outpass:', error)
+        alert(`An error occurred while accepting outpass with ID: ${id}`)
+      })
   }
 
-  // Filter outpasses by date range
-  filterByDate = (data, fromDate, toDate) => {
-    if (!fromDate && !toDate) return data
+  // hod decline
 
-    return data.filter(item => {
-      const itemDate = new Date(item.current_datetime)
-      const from = fromDate ? new Date(fromDate) : null
-      const to = toDate ? new Date(toDate) : null
+  handleDecline = id => {
+    // Show a confirmation dialog to the staff member
+    const confirmDecline = window.confirm(
+      'Are you sure you want to decline this outpass?',
+    )
 
-      if (from && itemDate < from) return false
-      if (to && itemDate > to) return false
-      return true
-    })
+    if (confirmDecline) {
+      axios
+        .post(`http://localhost:3000/api/outpass/outpass/${id}/decline`)
+        .then(response => {
+          if (response.data.success) {
+            // Update the UI to reflect the declined outpass
+            this.updateOutpassStatus(id, 'Declined')
+
+            // Send a rejection email
+
+            alert(`Declined outpass with ID: ${id}`)
+          } else {
+            alert(`Failed to decline outpass with ID: ${id}`)
+          }
+        })
+        .catch(error => {
+          console.error('Error declining outpass:', error)
+          alert(`An error occurred while declining outpass with ID: ${id}`)
+        })
+    }
   }
 
   updateOutpassStatus(id, status) {
@@ -152,20 +128,7 @@ class Index extends Component {
   render() {
     const {location} = this.props
     const {username, user} = location.state || {}
-    const {
-      outpassData,
-      employeeOutpassData,
-      loading,
-      fromDate,
-      toDate,
-    } = this.state
-
-    const filteredOutpassData = this.filterByDate(outpassData, fromDate, toDate)
-    const filteredEmployeeOutpassData = this.filterByDate(
-      employeeOutpassData,
-      fromDate,
-      toDate,
-    )
+    const {outpassData, employeeOutpassData, loading} = this.state
 
     return (
       <div className="container-fluid">
@@ -181,34 +144,11 @@ class Index extends Component {
             <div className="col p-0 m-0">
               <div className="p-2 d-flex justify-content-center flex-column shadow">
                 <h4 className="text-center">History</h4>
-
-                {/* Date Filter Inputs */}
-                <div className="d-flex justify-content-between mb-3">
-                  <div>
-                    <label htmlFor="fromDate">From: </label>
-                    <input
-                      id="fromDate"
-                      type="date"
-                      value={fromDate}
-                      onChange={e => this.handleDateChange(e, 'fromDate')}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="toDate">To: </label>
-                    <input
-                      id="toDate"
-                      type="date"
-                      value={toDate}
-                      onChange={e => this.handleDateChange(e, 'toDate')}
-                    />
-                  </div>
-                </div>
-
                 <div className="container">
                   <>
                     {user === 'hr' ? (
                       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-                        {filteredOutpassData.map(item => (
+                        {outpassData.map(item => (
                           <div key={item.id} className="col mb-4">
                             <div className="card">
                               <div className="card-body">
@@ -225,12 +165,6 @@ class Index extends Component {
                                   >
                                     {item.status}
                                   </span>
-                                </p>
-                                <p>
-                                  Requested Date:{' '}
-                                  {new Date(
-                                    item.current_datetime,
-                                  ).toLocaleDateString()}
                                 </p>
 
                                 {user === 'hr' && item.status === 'pending' && (
@@ -258,18 +192,16 @@ class Index extends Component {
                       </div>
                     ) : (
                       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-                        {filteredEmployeeOutpassData.map(item => (
+                        {employeeOutpassData.map(item => (
                           <div key={item.id} className="col mb-4">
                             <div className="card">
                               <div className="card-body">
                                 <h3 className="card-title">{item.name}</h3>
+
                                 <p className="card-text">Email: {item.email}</p>
                                 <p className="card-text">Role: {item.role}</p>
                                 <p className="card-text">
-                                  Requested Date:{' '}
-                                  {new Date(
-                                    item.current_datetime,
-                                  ).toLocaleDateString()}
+                                  Requested Time: {item.current_datetime}
                                 </p>
                                 <p className="card-text">
                                   Reason: {item.reason}
@@ -299,4 +231,4 @@ class Index extends Component {
   }
 }
 
-export default withRouter(Index)
+export default withRouter(index)

@@ -138,3 +138,9 @@
   line-height: 16px;
   color: #ff0b37;
 }
+
+.heading{
+  text-align: center;
+  font-size: 24px;
+  margin-top: 5px;
+}

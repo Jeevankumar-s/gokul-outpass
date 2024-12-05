@@ -60,10 +60,27 @@ const Header = props => {
               <span className="ms-1 d-none d-sm-inline">History</span>
             </Link>
           </li>
+          {user === 'hr' && (
+            <li>
+              <Link
+                to={{
+                  pathname: '/add-user',
+                  state: {
+                    username,
+                    user,
+                  },
+                }}
+                className="nav-link px-0 align-middle text-white"
+              >
+                <i className="fs-4 bi-people"> </i>
+                <span className="ms-1 d-none d-sm-inline">Add User</span>
+              </Link>
+            </li>
+          )}
         </ul>
         <hr />
-        <p>{username}</p>
         <p>{user}</p>
+        <p>{username}</p>
         <div className="dropdown pb-4">
           <button
             type="submit"

@@ -1,0 +1,68 @@
+/* AddUser.css */
+
+/* Style the form container */
+.add-user-form-container {
+    margin-top: 50px;
+    padding: 30px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+  }
+  
+  /* Heading Style */
+  .form-heading {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #343a40;
+  }
+  
+  /* Form layout and inputs */
+  .add-user-form .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .add-user-form .form-group label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+  }
+  
+  .add-user-form .form-control {
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+  }
+  
+  /* Button Styling */
+  .add-user-form button {
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-user-form button:hover {
+    background-color: #0056b3;
+    cursor: pointer;
+  }
+  
+  /* Responsive Styling */
+  @media (max-width: 768px) {
+    .add-user-form-container {
+      margin-top: 20px;
+      padding: 20px;
+    }
+  
+    .form-heading {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+  }
+  
